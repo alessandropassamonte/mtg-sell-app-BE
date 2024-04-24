@@ -1,5 +1,7 @@
 package com.mtgsell.mtgsellapp.services;
 
+import com.mtgsell.mtgsellapp.dto.request.LoginRequest;
+import com.mtgsell.mtgsellapp.dto.request.RegisterUserRequest;
 import com.mtgsell.mtgsellapp.entities.UserEntity;
 import com.mtgsell.mtgsellapp.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +27,7 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserEntity signup(UserEntity input) {
+    public UserEntity signup(RegisterUserRequest input) {
         UserEntity user = new UserEntity();
         user.setUsername(input.getUsername());
         user.setEmail(input.getEmail());
@@ -34,7 +36,7 @@ public class AuthenticationService {
         return userRepository.save(user);
     }
 
-    public UserEntity authenticate(UserEntity input) {
+    public UserEntity authenticate(LoginRequest input) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         input.getUsername(),

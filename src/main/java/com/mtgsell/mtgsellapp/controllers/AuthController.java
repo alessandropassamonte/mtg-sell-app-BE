@@ -1,4 +1,6 @@
 package com.mtgsell.mtgsellapp.controllers;
+import com.mtgsell.mtgsellapp.dto.request.LoginRequest;
+import com.mtgsell.mtgsellapp.dto.request.RegisterUserRequest;
 import com.mtgsell.mtgsellapp.dto.response.JwtResponse;
 import com.mtgsell.mtgsellapp.entities.UserEntity;
 import com.mtgsell.mtgsellapp.services.AuthenticationService;
@@ -20,20 +22,16 @@ public class AuthController {
     }
 
 
-    @PostMapping("/signup")
-    public ResponseEntity<UserEntity> register(@RequestBody UserEntity registerUserDto) {
+    @PostMapping("/register")
+    public ResponseEntity<UserEntity> register(@RequestBody RegisterUserRequest registerUserDto) {
         UserEntity registeredUser = authenticationService.signup(registerUserDto);
-
         return ResponseEntity.ok(registeredUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody UserEntity loginUserDto) {
+    public ResponseEntity<?> authenticate(@RequestBody LoginRequest loginUserDto) {
         UserEntity authenticatedUser = authenticationService.authenticate(loginUserDto);
-
         String jwtToken = jwtService.generateToken(authenticatedUser);
-
-
         return ResponseEntity.ok(new JwtResponse(jwtToken));
     }
 
