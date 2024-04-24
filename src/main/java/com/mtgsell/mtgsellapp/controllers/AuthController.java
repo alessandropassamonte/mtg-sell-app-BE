@@ -1,42 +1,41 @@
 package com.mtgsell.mtgsellapp.controllers;
-import com.mtgsell.mtgsellapp.conf.CustomUserDetailsService;
-import com.mtgsell.mtgsellapp.conf.JwtUtil;
-import com.mtgsell.mtgsellapp.dto.request.LoginRequest;
 import com.mtgsell.mtgsellapp.dto.response.JwtResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mtgsell.mtgsellapp.entities.UserEntity;
+import com.mtgsell.mtgsellapp.services.AuthenticationService;
+import com.mtgsell.mtgsellapp.services.JwtService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@RequestMapping("/auth")
 @RestController
 public class AuthController {
+    private final JwtService jwtService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationService authenticationService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    public AuthController(JwtService jwtService, AuthenticationService authenticationService) {
+        this.jwtService = jwtService;
+        this.authenticationService = authenticationService;
+    }
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+
+    @PostMapping("/signup")
+    public ResponseEntity<UserEntity> register(@RequestBody UserEntity registerUserDto) {
+        UserEntity registeredUser = authenticationService.signup(registerUserDto);
+
+        return ResponseEntity.ok(registeredUser);
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        } catch (AuthenticationException e) {
-            return ResponseEntity.badRequest().body("Invalid username or password");
-        }
+    public ResponseEntity<?> authenticate(@RequestBody UserEntity loginUserDto) {
+        UserEntity authenticatedUser = authenticationService.authenticate(loginUserDto);
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
-        final String jwt = jwtUtil.generateToken(userDetails.getUsername());
+        String jwtToken = jwtService.generateToken(authenticatedUser);
 
-        return ResponseEntity.ok(new JwtResponse(jwt));
+
+        return ResponseEntity.ok(new JwtResponse(jwtToken));
     }
+
+
 }
