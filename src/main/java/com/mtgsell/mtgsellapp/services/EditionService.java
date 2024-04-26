@@ -194,7 +194,8 @@ public class EditionService {
             if (jsonString != null) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 try {
-                    List<Map<String, Object>> entities = objectMapper.readValue(jsonString, new TypeReference<List<Map<String, Object>>>() {});
+                    List<Map<String, Object>> entities = objectMapper.readValue(jsonString, new TypeReference<List<Map<String, Object>>>() {
+                    });
                     this.createCard(entities);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -207,9 +208,11 @@ public class EditionService {
     }
 
     @Transactional
-    public void createCard(List<Map<String, Object>> entities ){
+    public void createCard(List<Map<String, Object>> entities) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try{
+        List<Card> cardToSave = new ArrayList<>();
+        try {
+            int indexCard = 0;
             for (Map<String, Object> entity : entities) {
                 Card card = new Card();
                 //SET
@@ -232,7 +235,7 @@ public class EditionService {
                 //COLORI
                 List<Color> color = new ArrayList<>();
                 List<Color> colorIdentities = new ArrayList<>();
-                if(Objects.nonNull(entity.get("color"))){
+                if (Objects.nonNull(entity.get("color"))) {
                     List<String> colorList = (List<String>) entity.get("colors");
                     if (colorList.isEmpty()) {
                         color.add(colorRepository.findByColor("N").orElseThrow());
@@ -243,7 +246,7 @@ public class EditionService {
                     }
                     card.setColors(color);
                 }
-                if(Objects.nonNull(entity.get("color_identity"))){
+                if (Objects.nonNull(entity.get("color_identity"))) {
                     List<String> identityList = (List<String>) entity.get("color_identity");
                     if (identityList.isEmpty()) {
                         colorIdentities.add(colorRepository.findByColor("N").orElseThrow());
@@ -266,7 +269,7 @@ public class EditionService {
                 card.setLayout(entity.get("layout").toString());
                 card.setHighresImage((Boolean) entity.get("highres_image"));
                 card.setImageStatus(entity.get("image_status").toString());
-                if(Objects.nonNull(entity.get("image_uris"))){
+                if (Objects.nonNull(entity.get("image_uris"))) {
                     Map<String, String> image = (Map<String, String>) entity.get("image_uris");
                     String pngImage = "";
                     for (Map.Entry<String, String> entry : image.entrySet()) {
@@ -276,8 +279,8 @@ public class EditionService {
                     }
                     card.setPng(pngImage);
                 }
-                card.setManaCost(Objects.nonNull(entity.get("mana_cost")) ? entity.get("mana_cost").toString(): null);
-                if(Objects.nonNull(entity.get("cmc"))){
+                card.setManaCost(Objects.nonNull(entity.get("mana_cost")) ? entity.get("mana_cost").toString() : null);
+                if (Objects.nonNull(entity.get("cmc"))) {
                     Double cmcDouble = (Double) entity.get("cmc");
                     Integer cmcInteger = cmcDouble.intValue(); // Converti il Double in Integer
                     card.setCmc(cmcInteger);
@@ -298,18 +301,18 @@ public class EditionService {
                 card.setRulingsUri(entity.get("rulings_uri").toString());
                 card.setPrintsSearchUri(entity.get("prints_search_uri").toString());
                 card.setCollectorNumber(entity.get("collector_number").toString());
-                card.setDigital((Boolean)entity.get("digital"));
+                card.setDigital((Boolean) entity.get("digital"));
                 card.setRarity(entity.get("rarity").toString());
                 card.setFlavorText(Objects.nonNull(entity.get("flavor_text")) ? entity.get("flavor_text").toString() : null);
                 card.setArtist(entity.get("artist").toString());
                 card.setBorderColor(entity.get("border_color").toString());
 
                 card.setFrame(entity.get("frame").toString());
-                card.setFullArt((Boolean)entity.get("full_art"));
-                card.setTextless((Boolean)entity.get("textless"));
-                card.setBooster((Boolean)entity.get("booster"));
-                card.setStorySpotlight((Boolean)entity.get("story_spotlight"));
-                card.setEdhrecRank((Integer)entity.get("edhrec_rank"));
+                card.setFullArt((Boolean) entity.get("full_art"));
+                card.setTextless((Boolean) entity.get("textless"));
+                card.setBooster((Boolean) entity.get("booster"));
+                card.setStorySpotlight((Boolean) entity.get("story_spotlight"));
+                card.setEdhrecRank((Integer) entity.get("edhrec_rank"));
                 Map<String, String> prices = (Map<String, String>) entity.get("prices");
                 BigDecimal price = null;
                 BigDecimal priceFoil = null;
@@ -324,14 +327,14 @@ public class EditionService {
                 card.setPrice(price);
                 card.setPriceFoil(priceFoil);
 
-                if(Objects.nonNull(entity.get("card_faces"))){
+                if (Objects.nonNull(entity.get("card_faces"))) {
                     List<Object> card_faces = (List<Object>) entity.get("card_faces");
 
                     int index = 0;
                     for (Object cardFace : card_faces) {
                         if (cardFace instanceof Map) {
                             Map<String, Object> cardFaceMap = (Map<String, Object>) cardFace;
-                            if(index == 0){
+                            if (index == 0) {
                                 card.setNameFace1(Objects.nonNull(cardFaceMap.get("name")) ? cardFaceMap.get("name").toString() : null);
                                 card.setPrintedNameFace1(Objects.nonNull(cardFaceMap.get("printed_name")) ? cardFaceMap.get("printed_name").toString() : null);
                                 card.setPrintedTextFace1(Objects.nonNull(cardFaceMap.get("printed_text")) ? cardFaceMap.get("printed_text").toString() : null);
@@ -341,7 +344,7 @@ public class EditionService {
                                 card.setFlavorTextFace1(Objects.nonNull(cardFaceMap.get("flavor_text")) ? cardFaceMap.get("flavor_text").toString() : null);
                                 card.setPowerFace1(Objects.nonNull(cardFaceMap.get("power")) ? cardFaceMap.get("power").toString() : null);
                                 card.setToughnessFace1(Objects.nonNull(cardFaceMap.get("toughness")) ? cardFaceMap.get("toughness").toString() : null);
-                                if(Objects.nonNull(cardFaceMap.get("image_uris"))){
+                                if (Objects.nonNull(cardFaceMap.get("image_uris"))) {
                                     Map<String, String> image = (Map<String, String>) cardFaceMap.get("image_uris");
                                     String pngImageFace = "";
                                     for (Map.Entry<String, String> entry : image.entrySet()) {
@@ -352,7 +355,7 @@ public class EditionService {
                                     card.setImageFace1(pngImageFace);
                                 }
                             }
-                            if(index == 1){
+                            if (index == 1) {
                                 card.setNameFace2(Objects.nonNull(cardFaceMap.get("name")) ? cardFaceMap.get("name").toString() : null);
                                 card.setPrintedNameFace2(Objects.nonNull(cardFaceMap.get("printed_name")) ? cardFaceMap.get("printed_name").toString() : null);
                                 card.setPrintedTextFace2(Objects.nonNull(cardFaceMap.get("printed_text")) ? cardFaceMap.get("printed_text").toString() : null);
@@ -362,7 +365,7 @@ public class EditionService {
                                 card.setFlavorTextFace2(Objects.nonNull(cardFaceMap.get("flavor_text")) ? cardFaceMap.get("flavor_text").toString() : null);
                                 card.setPowerFace2(Objects.nonNull(cardFaceMap.get("power")) ? cardFaceMap.get("power").toString() : null);
                                 card.setToughnessFace2(Objects.nonNull(cardFaceMap.get("toughness")) ? cardFaceMap.get("toughness").toString() : null);
-                                if(Objects.nonNull(cardFaceMap.get("image_uris"))){
+                                if (Objects.nonNull(cardFaceMap.get("image_uris"))) {
                                     Map<String, String> image = (Map<String, String>) cardFaceMap.get("image_uris");
                                     String pngImageFace = "";
                                     for (Map.Entry<String, String> entry : image.entrySet()) {
@@ -376,13 +379,22 @@ public class EditionService {
                         }
                         index++;
                     }
-                    cardRepository.save(card);
-                }
 
+
+                }
+                cardToSave.add(card);
+                if (indexCard == 500) {
+                    cardRepository.saveAll(cardToSave);
+                    cardToSave.clear();
+                    indexCard = 0;
+                }
+                indexCard++;
+            }
+            if (!cardToSave.isEmpty()) {
+                cardRepository.saveAll(cardToSave);
             }
             System.out.println("ok");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
