@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -29,8 +30,7 @@ public class UserController {
 
     @Autowired
     EditionService editionService;
-
-    @GetMapping(value="/test", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/test")
     public ResponseEntity<?> test() throws IOException, ParseException {
         return ResponseEntity.ok("OK");
 
