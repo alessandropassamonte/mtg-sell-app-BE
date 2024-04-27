@@ -31,9 +31,8 @@ public class UserController {
     EditionService editionService;
 
     @GetMapping(value="/test", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void test() throws IOException, ParseException {
-        editionService.readAsyncFile();
-
+    public ResponseEntity<?> test() throws IOException, ParseException {
+        return ResponseEntity.ok("OK");
 
     }
 }
