@@ -28,4 +28,8 @@ public class CardService {
         String token = "%token%";
         return cardRepository.findAllCardsByName(basicLand.toLowerCase(), terraBase.toLowerCase(), token.toLowerCase(), search, pageRequest);
     }
+
+    public Card findById(String id) {
+        return cardRepository.findByCardId(id).orElseThrow();
+    }
 }

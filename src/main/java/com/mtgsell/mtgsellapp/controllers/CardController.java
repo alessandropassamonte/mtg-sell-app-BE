@@ -5,10 +5,7 @@ import com.mtgsell.mtgsellapp.services.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -34,5 +31,10 @@ public class CardController {
                                     @RequestParam(defaultValue = "12") int size, @RequestParam String search) {
         Page<Card> resultPage = cardService.findByNamePaginated(page, size, search);
         return resultPage;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Card> findById( @PathVariable String id) {
+        return ResponseEntity.ok(cardService.findById(id));
     }
 }

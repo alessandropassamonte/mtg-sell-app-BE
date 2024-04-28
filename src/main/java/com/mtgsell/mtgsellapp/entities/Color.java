@@ -12,5 +12,6 @@ public class Color {
     private Long id;
     private String color;
     private String description;
+    private String image;
 
 }

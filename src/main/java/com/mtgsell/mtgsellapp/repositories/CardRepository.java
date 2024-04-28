@@ -2,11 +2,14 @@ package com.mtgsell.mtgsellapp.repositories;
 
 import com.mtgsell.mtgsellapp.entities.Card;
 import com.mtgsell.mtgsellapp.entities.Edition;
+import com.mtgsell.mtgsellapp.entities.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface CardRepository extends JpaRepository<Card, Long> {
@@ -20,4 +23,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             "(c.typeLine IS NOT NULL AND c.typeLine NOT LIKE %:basicLand% AND c.typeLine NOT LIKE %:token%) OR " +
             "(c.printedTypeLine IS NOT NULL AND c.printedTypeLine NOT LIKE %:terraBase%) )  ")
     Page<Card> findAllCardsByName(String basicLand, String terraBase, String token, String search, Pageable pageable);
+
+    Optional<Card> findByCardId(String cardId);
+
 }
