@@ -15,6 +15,17 @@ public class CardService {
 
     public Page<Card> findPaginated(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return cardRepository.findAll(pageRequest);
+        String basicLand = "%basic land%";
+        String terraBase = "%terra base%";
+        String token = "%token%";
+        return cardRepository.findAllCards(basicLand.toLowerCase(), terraBase.toLowerCase(), token.toLowerCase(), pageRequest);
+    }
+
+    public Page<Card> findByNamePaginated(int page, int size, String search) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        String basicLand = "%basic land%";
+        String terraBase = "%terra base%";
+        String token = "%token%";
+        return cardRepository.findAllCardsByName(basicLand.toLowerCase(), terraBase.toLowerCase(), token.toLowerCase(), search, pageRequest);
     }
 }

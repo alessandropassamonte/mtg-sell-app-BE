@@ -21,13 +21,18 @@ public class CardController {
     @Autowired
     CardService cardService;
 
-
-
     @GetMapping("/all")
     public Page<Card> findPaginated(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "20") int size) {
+                                                    @RequestParam(defaultValue = "12") int size) {
         Page<Card> resultPage = cardService.findPaginated(page, size);
+        return resultPage;
+    }
 
+
+    @GetMapping("/search")
+    public Page<Card> findPaginated(@RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "12") int size, @RequestParam String search) {
+        Page<Card> resultPage = cardService.findByNamePaginated(page, size, search);
         return resultPage;
     }
 }
