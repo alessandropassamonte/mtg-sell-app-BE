@@ -24,6 +24,12 @@ public class UserEntity implements UserDetails {
 
     private String email;
 
+    @ManyToMany
+    @JoinTable(name = "card_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "card_id"))
+    private List<Card> cards;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
