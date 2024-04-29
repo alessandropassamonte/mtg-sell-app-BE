@@ -1,6 +1,7 @@
 package com.mtgsell.mtgsellapp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mtgsell.mtgsellapp.dto.request.CardAddUserRequest;
 import com.mtgsell.mtgsellapp.entities.Card;
 import com.mtgsell.mtgsellapp.entities.Edition;
 import com.mtgsell.mtgsellapp.entities.UserEntity;
@@ -42,6 +43,12 @@ public class UserController {
                                   HttpServletRequest request) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return userService.getCardsByUser(request, pageRequest);
+    }
+
+    @PostMapping("/addCards")
+    public ResponseEntity<?> addCardsToUser(@RequestBody CardAddUserRequest cardAddUserRequest, HttpServletRequest request) {
+        userService.addCardsToCurrentUser(cardAddUserRequest.getCardsId(), request);
+        return ResponseEntity.ok("OK");
     }
 
 }

@@ -1,7 +1,13 @@
 package com.mtgsell.mtgsellapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -24,11 +30,9 @@ public class UserEntity implements UserDetails {
 
     private String email;
 
-    @ManyToMany
-    @JoinTable(name = "card_user",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "card_id"))
-    private List<Card> cards;
+    @OneToMany(mappedBy="users")
+    @JsonIgnore
+    private List<UserCard> usersCards;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -58,4 +62,6 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }
