@@ -37,4 +37,10 @@ public class CardController {
     public ResponseEntity<Card> findById( @PathVariable String id) {
         return ResponseEntity.ok(cardService.findById(id));
     }
+
+    @GetMapping("/searchAutocomplete")
+    public List<Card> findAutocomplete(@RequestParam String search) {
+        List<Card> result = cardService.findAutocomplete(search);
+        return result;
+    }
 }

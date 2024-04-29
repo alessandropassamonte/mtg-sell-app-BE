@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CardService {
 
@@ -31,5 +33,12 @@ public class CardService {
 
     public Card findById(String id) {
         return cardRepository.findByCardId(id).orElseThrow();
+    }
+
+    public List<Card> findAutocomplete(String search) {
+        String basicLand = "%basic land%";
+        String terraBase = "%terra base%";
+        String token = "%token%";
+        return cardRepository.findAutocomplete(basicLand.toLowerCase(), terraBase.toLowerCase(), token.toLowerCase(), search).orElseThrow();
     }
 }

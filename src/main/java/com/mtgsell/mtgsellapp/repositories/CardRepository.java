@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -29,5 +30,11 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 
     @Query("SELECT c FROM Card c JOIN c.usersCards uc WHERE uc.users = :user")
     Page<Card> findAllByUser(@Param("user") UserEntity user, Pageable pageable);
+
+
+    @Query("SELECT c FROM Card c WHERE (c.name LIKE %:search% or c.printedName LIKE %:search%) AND ( " +
+            "(c.typeLine IS NOT NULL AND c.typeLine NOT LIKE %:basicLand% AND c.typeLine NOT LIKE %:token%) OR " +
+            "(c.printedTypeLine IS NOT NULL AND c.printedTypeLine NOT LIKE %:terraBase%) )  ")
+    Optional<List<Card>> findAutocomplete(String basicLand, String terraBase, String token, String search);
 
 }
