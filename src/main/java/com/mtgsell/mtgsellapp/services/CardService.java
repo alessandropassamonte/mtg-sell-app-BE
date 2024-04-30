@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +37,21 @@ public class CardService {
     }
 
     public Card findById(String id) {
-        return cardRepository.findByCardId(id).orElseThrow();
+        Card card = cardRepository.findByCardId(id).orElseThrow();
+
+        String cardName = card.getName();
+        cardName = cardName.replaceAll("[^\\w\\s]", "").replaceAll("\\s+", "-");
+        cardName = cardName.replaceAll("^-|-$", "");
+        String result = "";
+        try{
+           result = scraping(card.getEditions().get(0).getCardMarketName(), cardName);
+        } catch (Exception e) {
+            result = scraping(card.getEditions().get(0).getCardMarketName() + "-Extras", cardName);
+        }
+
+
+        card.setPriceCM(result);
+        return card;
     }
 
     public List<Card> findAutocomplete(String search) {
@@ -47,22 +62,27 @@ public class CardService {
     }
 
     public String scraping(String setName, String cardName) {
-
         System.setProperty("webdriver.chrome.driver", "C:\\ProgramData\\chocolatey\\lib\\chromedriver\\tools\\chromedriver-win32\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        String url = "https://www.cardmarket.com/it/Magic/Products/Singles/" + setName + "/" + cardName + "?sellerCountry=17&language=1,5&minCondition=3";
-        driver.get(url);
-        WebElement table = driver.findElement(By.className("table"));
-        List<WebElement> results = table.findElements(By.cssSelector(".color-primary.small.text-end.text-nowrap.fw-bold"));
-        String resultItem = results.get(1).getText();
-        for (WebElement result : results) {
-            System.out.println(result.getText());
+
+        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("--headless=new");
+        WebDriver driver = new ChromeDriver(options);
+        try {
+            String url = "https://www.cardmarket.com/it/Magic/Products/Singles/" + setName + "/" + cardName + "?sellerCountry=17&language=1,5&minCondition=3";
+            System.out.println("URL: " + url);
+            driver.get(url);
+            WebElement table = driver.findElement(By.className("table"));
+            List<WebElement> results = table.findElements(By.cssSelector(".color-primary.small.text-end.text-nowrap.fw-bold"));
+            String resultItem = results.get(1).getText();
+            return resultItem;
+        } finally {
+            // Assicura che il browser venga chiuso anche in caso di eccezione
+            driver.quit();
         }
-
-        driver.quit();
-
-        return resultItem;
     }
+
+
+
 
 
 

@@ -22,4 +22,6 @@ public class Edition {
     private String setSearchUri;
     private String scryfallSetUri;
 
+    private String cardMarketName;
+
 }

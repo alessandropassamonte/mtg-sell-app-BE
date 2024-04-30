@@ -3,6 +3,7 @@ package com.mtgsell.mtgsellapp.controllers;
 import com.mtgsell.mtgsellapp.dto.response.PriceResponse;
 import com.mtgsell.mtgsellapp.entities.Card;
 import com.mtgsell.mtgsellapp.services.CardService;
+import com.mtgsell.mtgsellapp.services.EditionService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -22,6 +23,9 @@ public class CardController {
 
     @Autowired
     CardService cardService;
+
+    @Autowired
+    EditionService editionService;
 
     @GetMapping("/all")
     public Page<Card> findPaginated(@RequestParam(defaultValue = "0") int page,
@@ -55,7 +59,13 @@ public class CardController {
         PriceResponse priceResponse = new PriceResponse();
         priceResponse.setPrice(cardService.scraping(setName, cardName));
         return ResponseEntity.ok(priceResponse);
+    }
 
+
+    @GetMapping("/updateEdition")
+    public ResponseEntity<?> scraping() {
+        editionService.updateAllCardMarketNames();
+        return ResponseEntity.ok("OK");
     }
 
 }

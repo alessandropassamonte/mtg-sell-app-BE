@@ -22,9 +22,44 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class EditionService {
 
+    @Autowired
+    EditionRepository editionRepository;
+
+    @Transactional
+    public void updateAllCardMarketNames() {
+        List<Edition> editions = editionRepository.findAll();
+        List<Edition> updated = new ArrayList<>();
+
+        for (Edition edition : editions) {
+            Edition updateEdition = edition;
+            updateEdition.setCardMarketName(updateNameCardMarket(edition.getSetName()));
+            updated.add(updateEdition);
+        }
+
+        editionRepository.saveAll(updated);
+    }
+
+    public String updateNameCardMarket(String setName) {
+        String result = setName;
+        if (result.equals("Revised Edition")) {
+            result = "Revised";
+        }
+
+        // Controlla se la parola "Commander" è presente e la mette in prima posizione
+        Pattern pattern = Pattern.compile("(.*?)(\\bCommander\\b)(.*)");
+        Matcher matcher = pattern.matcher(result);
+        if (matcher.matches()) {
+            result = "Commander " + matcher.group(1) + matcher.group(3);
+        }
+        result = result.replaceAll("[^\\w\\s]", "").replaceAll("\\s+", "-");
+        result = result.replaceAll("^-|-$", "");
+        return result;
+    }
 
 }

@@ -115,6 +115,7 @@ public class Card {
     private Integer edhrecRank;
     private BigDecimal price;
     private BigDecimal priceFoil;
+    private String priceCM;
 
     @Lob
     @Column(columnDefinition = "TEXT")
