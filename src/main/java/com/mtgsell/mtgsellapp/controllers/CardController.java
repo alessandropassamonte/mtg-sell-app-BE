@@ -1,7 +1,12 @@
 package com.mtgsell.mtgsellapp.controllers;
 
+import com.mtgsell.mtgsellapp.dto.response.PriceResponse;
 import com.mtgsell.mtgsellapp.entities.Card;
 import com.mtgsell.mtgsellapp.services.CardService;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +25,7 @@ public class CardController {
 
     @GetMapping("/all")
     public Page<Card> findPaginated(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "12") int size) {
+                                    @RequestParam(defaultValue = "12") int size) {
         Page<Card> resultPage = cardService.findPaginated(page, size);
         return resultPage;
     }
@@ -34,7 +39,7 @@ public class CardController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Card> findById( @PathVariable String id) {
+    public ResponseEntity<Card> findById(@PathVariable String id) {
         return ResponseEntity.ok(cardService.findById(id));
     }
 
@@ -43,4 +48,14 @@ public class CardController {
         List<Card> result = cardService.findAutocomplete(search);
         return result;
     }
+
+
+    @GetMapping("/scraping")
+    public ResponseEntity<?> scraping(@RequestParam String setName, @RequestParam String cardName) {
+        PriceResponse priceResponse = new PriceResponse();
+        priceResponse.setPrice(cardService.scraping(setName, cardName));
+        return ResponseEntity.ok(priceResponse);
+
+    }
+
 }
