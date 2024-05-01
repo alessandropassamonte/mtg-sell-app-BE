@@ -43,7 +43,7 @@ public class CardController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Card> findById(@PathVariable String id, @RequestParam(required = false, defaultValue = "false") Boolean isFoil) {
+    public ResponseEntity<Card> findById(@PathVariable String id, @RequestParam(required = false, defaultValue = "false") Boolean isFoil) throws IOException {
         return ResponseEntity.ok(cardService.findById(id, isFoil));
     }
 
@@ -55,7 +55,7 @@ public class CardController {
 
 
     @GetMapping("/scraping")
-    public ResponseEntity<?> scraping(@RequestParam String setName, @RequestParam String cardName, @RequestParam(required = false, defaultValue = "false") Boolean isFoil) {
+    public ResponseEntity<?> scraping(@RequestParam String setName, @RequestParam String cardName, @RequestParam(required = false, defaultValue = "false") Boolean isFoil) throws IOException {
         PriceResponse priceResponse = new PriceResponse();
         priceResponse.setPrice(cardService.scraping(setName, cardName, isFoil));
         return ResponseEntity.ok(priceResponse);

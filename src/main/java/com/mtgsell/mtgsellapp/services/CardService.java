@@ -8,10 +8,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -37,7 +40,7 @@ public class CardService {
         return cardRepository.findAllCardsByName(basicLand.toLowerCase(), terraBase.toLowerCase(), token.toLowerCase(), search, pageRequest);
     }
 
-    public Card findById(String id, Boolean isFoil) {
+    public Card findById(String id, Boolean isFoil) throws IOException {
         Card card = cardRepository.findByCardId(id).orElseThrow();
 
         String cardName = card.getName();
@@ -62,8 +65,18 @@ public class CardService {
         return cardRepository.findAutocomplete(basicLand.toLowerCase(), terraBase.toLowerCase(), token.toLowerCase(), search).orElseThrow();
     }
 
-    public String scraping(String setName, String cardName, Boolean isFoil) {
-        System.setProperty("webdriver.chrome.driver", "C:\\ProgramData\\chocolatey\\lib\\chromedriver\\tools\\chromedriver-win32\\chromedriver.exe");
+    public String scraping(String setName, String cardName, Boolean isFoil) throws IOException {
+        String chromeDriverPath;
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            Resource resource = new ClassPathResource("chromedriver.exe");
+            chromeDriverPath = resource.getFile().getAbsolutePath();
+            System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+        } else {
+            Resource resource = new ClassPathResource("chromedriverLinux");
+            chromeDriverPath = resource.getFile().getAbsolutePath();
+            System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+        }
+
         String resultItem = "";
         ChromeOptions options = new ChromeOptions();
 //        options.addArguments("--headless=new");
