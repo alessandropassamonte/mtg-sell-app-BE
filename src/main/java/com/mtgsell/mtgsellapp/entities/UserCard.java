@@ -21,6 +21,8 @@ public class UserCard {
 
     private Boolean inVendita;
 
+    private Boolean foil;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
