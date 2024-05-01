@@ -29,24 +29,25 @@ public class CardService {
     }
 
     public Page<Card> findByNamePaginated(int page, int size, String search) {
-        PageRequest pageRequest = PageRequest.of(page, size);
+
+        PageRequest pageRequest = PageRequest.of(page < 0 ? 0 : page, size);
         String basicLand = "%basic land%";
         String terraBase = "%terra base%";
         String token = "%token%";
         return cardRepository.findAllCardsByName(basicLand.toLowerCase(), terraBase.toLowerCase(), token.toLowerCase(), search, pageRequest);
     }
 
-    public Card findById(String id) {
+    public Card findById(String id, Boolean isFoil) {
         Card card = cardRepository.findByCardId(id).orElseThrow();
 
         String cardName = card.getName();
-        cardName = cardName.replaceAll("[^\\w\\s]", "").replaceAll("\\s+", "-");
+        cardName = cardName.replaceAll("[^\\w\\s-]", "").replaceAll("\\s+", "-");
         cardName = cardName.replaceAll("^-|-$", "");
         String result = "";
-        try{
-           result = scraping(card.getEditions().get(0).getCardMarketName(), cardName);
+        try {
+            result = scraping(card.getEditions().get(0).getCardMarketName(), cardName, isFoil);
         } catch (Exception e) {
-            result = scraping(card.getEditions().get(0).getCardMarketName() + "-Extras", cardName);
+            result = scraping(card.getEditions().get(0).getCardMarketName() + "-Extras", cardName, isFoil);
         }
 
 
@@ -61,30 +62,28 @@ public class CardService {
         return cardRepository.findAutocomplete(basicLand.toLowerCase(), terraBase.toLowerCase(), token.toLowerCase(), search).orElseThrow();
     }
 
-    public String scraping(String setName, String cardName) {
+    public String scraping(String setName, String cardName, Boolean isFoil) {
         System.setProperty("webdriver.chrome.driver", "C:\\ProgramData\\chocolatey\\lib\\chromedriver\\tools\\chromedriver-win32\\chromedriver.exe");
-
+        String resultItem = "";
         ChromeOptions options = new ChromeOptions();
 //        options.addArguments("--headless=new");
         WebDriver driver = new ChromeDriver(options);
         try {
-            String url = "https://www.cardmarket.com/it/Magic/Products/Singles/" + setName + "/" + cardName + "?sellerCountry=17&language=1,5&minCondition=3";
+            String url = "https://www.cardmarket.com/it/Magic/Products/Singles/" + setName + "/" + cardName + "?sellerCountry=17&language=1,5&minCondition=3" + (isFoil ? "&isFoil=Y" : "");
             System.out.println("URL: " + url);
             driver.get(url);
             WebElement table = driver.findElement(By.className("table"));
             List<WebElement> results = table.findElements(By.cssSelector(".color-primary.small.text-end.text-nowrap.fw-bold"));
-            String resultItem = results.get(1).getText();
+            resultItem = results.get(1).getText();
             return resultItem;
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            // Assicura che il browser venga chiuso anche in caso di eccezione
             driver.quit();
         }
+
+        return resultItem;
     }
-
-
-
-
-
 
 
 }

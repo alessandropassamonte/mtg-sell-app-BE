@@ -19,6 +19,8 @@ public class UserCard {
 
     private Date date;
 
+    private Boolean inVendita;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
