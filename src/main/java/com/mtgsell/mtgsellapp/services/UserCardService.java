@@ -51,6 +51,10 @@ public class UserCardService {
             userCard.setUsers(userEntity);
             userCard.setCard(card);
 
+            userCard.setFoil(false);
+            userCard.setInVendita(false);
+            userCard.setAttivo(true);
+
             userCardRepository.save(userCard);
 
         }

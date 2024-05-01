@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserCardRepository extends JpaRepository<UserCard, Long> {
 
-    @Query("SELECT uc FROM UserCard uc WHERE uc.users = :user")
+    @Query("SELECT uc FROM UserCard uc WHERE uc.users = :user AND uc.attivo = true")
     Page<UserCard> findAllByUser(@Param("user") UserEntity user, Pageable pageable);
 }

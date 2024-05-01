@@ -54,10 +54,10 @@ public class CardController {
     }
 
 
-    @GetMapping("/scraping")
-    public ResponseEntity<?> scraping(@RequestParam String setName, @RequestParam String cardName, @RequestParam(required = false, defaultValue = "false") Boolean isFoil) throws IOException {
+    @PostMapping("/scraping")
+    public ResponseEntity<?> scraping(@RequestBody Card card, @RequestParam(required = false, defaultValue = "false") Boolean isFoil) throws IOException {
         PriceResponse priceResponse = new PriceResponse();
-        priceResponse.setPrice(cardService.scraping(setName, cardName, isFoil));
+        priceResponse.setPrice(cardService.executeScraping(card, isFoil));
         return ResponseEntity.ok(priceResponse);
     }
 

@@ -53,7 +53,6 @@ public class CardService {
             result = scraping(card.getEditions().get(0).getCardMarketName() + "-Extras", cardName, isFoil);
         }
 
-
         card.setPriceCM(result);
         return card;
     }
@@ -65,6 +64,19 @@ public class CardService {
         return cardRepository.findAutocomplete(basicLand.toLowerCase(), terraBase.toLowerCase(), token.toLowerCase(), search).orElseThrow();
     }
 
+
+    public String executeScraping(Card card, Boolean isFoil) throws IOException {
+        String cardName = card.getName();
+        cardName = cardName.replaceAll("[^\\w\\s-]", "").replaceAll("\\s+", "-");
+        cardName = cardName.replaceAll("^-|-$", "");
+        String result = "";
+        try {
+            return result = scraping(card.getEditions().get(0).getCardMarketName(), cardName, isFoil);
+        } catch (Exception e) {
+            return result = scraping(card.getEditions().get(0).getCardMarketName() + "-Extras", cardName, isFoil);
+        }
+
+    }
     public String scraping(String setName, String cardName, Boolean isFoil) throws IOException {
         String chromeDriverPath;
         if (System.getProperty("os.name").toLowerCase().contains("win")) {

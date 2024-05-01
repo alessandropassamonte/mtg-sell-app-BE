@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;
 
@@ -22,6 +23,8 @@ public class UserCard {
     private Boolean inVendita;
 
     private Boolean foil;
+
+    private Boolean attivo;
 
 
     @ManyToOne
