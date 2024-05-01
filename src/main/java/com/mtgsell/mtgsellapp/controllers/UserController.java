@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mtgsell.mtgsellapp.dto.request.CardAddUserRequest;
 import com.mtgsell.mtgsellapp.entities.Card;
 import com.mtgsell.mtgsellapp.entities.Edition;
+import com.mtgsell.mtgsellapp.entities.UserCard;
 import com.mtgsell.mtgsellapp.entities.UserEntity;
 import com.mtgsell.mtgsellapp.services.EditionService;
 import com.mtgsell.mtgsellapp.services.JwtService;
@@ -34,21 +35,6 @@ import java.util.Map;
 @RestController
 public class UserController {
 
-    @Autowired
-    UserService userService;
 
-    @GetMapping("/cards")
-    public Page<Card> getUsername(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "12") int size,
-                                  HttpServletRequest request) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return userService.getCardsByUser(request, pageRequest);
-    }
-
-    @PostMapping("/addCards")
-    public ResponseEntity<?> addCardsToUser(@RequestBody CardAddUserRequest cardAddUserRequest, HttpServletRequest request) {
-        userService.addCardsToCurrentUser(cardAddUserRequest.getCardsId(), request);
-        return ResponseEntity.ok("OK");
-    }
 
 }

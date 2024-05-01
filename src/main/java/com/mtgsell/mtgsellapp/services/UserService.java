@@ -28,47 +28,14 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private CardRepository cardRepository;
 
-    @Autowired
-    private UserCardRepository userCardRepository;
-
-    @Autowired
-    private JwtService jwtService;
 
     public UserEntity saveUser(UserEntity user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    public Page<Card> getCardsByUser(HttpServletRequest request, Pageable pageable) {
-        String username = jwtService.extractTokenFromRequest(request);
-        UserEntity userEntity = userRepository.findByUsername(username).orElseThrow();
-        if (userEntity != null) {
 
-            return cardRepository.findAllByUser(userEntity, pageable);
-        }
-        return Page.empty();
-    }
-
-
-    @Transactional
-    public void addCardsToCurrentUser(List<Long> cardIds, HttpServletRequest request) {
-        String username = jwtService.extractTokenFromRequest(request);
-        UserEntity userEntity = userRepository.findByUsername(username).orElseThrow();
-        for (Long cardId : cardIds) {
-            Card card = cardRepository.findById(cardId)
-                    .orElseThrow(() -> new IllegalArgumentException("Carta non trovata con id: " + cardId));
-
-            UserCard userCard = new UserCard();
-            userCard.setUsers(userEntity);
-            userCard.setCard(card);
-
-            userCardRepository.save(userCard);
-
-        }
-    }
 
     public UserEntity findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow();

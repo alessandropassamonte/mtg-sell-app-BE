@@ -29,9 +29,15 @@ public class UserCard {
 
     @ManyToOne
     @JoinColumn(name = "card_id")
-    @JsonIgnore
     private Card card;
 
-
-
+    @Override
+    public String toString() {
+        return "UserCard{" +
+                "id=" + id +
+                ", date=" + date +
+                ", inVendita=" + inVendita +
+                ", card=" + card +
+                '}';
+    }
 }
