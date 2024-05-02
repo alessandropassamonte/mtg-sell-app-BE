@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 @Service
 public class UserCardService {
@@ -40,24 +41,13 @@ public class UserCardService {
 
 
     @Transactional
-    public void addCardsToCurrentUser(List<Long> cardIds, HttpServletRequest request) {
+    public void addCardsToCurrentUser(UserCard userCard, HttpServletRequest request) {
         String username = jwtService.extractTokenFromRequest(request);
         UserEntity userEntity = userRepository.findByUsername(username).orElseThrow();
-        for (Long cardId : cardIds) {
-            Card card = cardRepository.findById(cardId)
-                    .orElseThrow(() -> new IllegalArgumentException("Carta non trovata con id: " + cardId));
-
-            UserCard userCard = new UserCard();
-            userCard.setUsers(userEntity);
-            userCard.setCard(card);
-
-            userCard.setFoil(false);
-            userCard.setInVendita(false);
-            userCard.setAttivo(true);
-
-            userCardRepository.save(userCard);
-
-        }
+        userCard.setUsers(userEntity);
+        userCard.setCard(cardRepository.findById(userCard.getCard().getId()).orElseThrow());
+        userCard.setDate(new Date());
+        userCardRepository.save(userCard);
     }
 
     @Transactional

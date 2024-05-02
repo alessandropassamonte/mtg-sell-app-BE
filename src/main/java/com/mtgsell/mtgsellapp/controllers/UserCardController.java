@@ -36,8 +36,8 @@ public class UserCardController {
     }
 
     @PostMapping("/addCards")
-    public ResponseEntity<?> addCardsToUser(@RequestBody CardAddUserRequest cardAddUserRequest, HttpServletRequest request) {
-        userCardService.addCardsToCurrentUser(cardAddUserRequest.getCardsId(), request);
+    public ResponseEntity<?> addCardsToUser(@RequestBody UserCard userCard, HttpServletRequest request) {
+        userCardService.addCardsToCurrentUser(userCard, request);
         return ResponseEntity.ok("OK");
     }
 
