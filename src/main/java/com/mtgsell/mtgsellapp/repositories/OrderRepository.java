@@ -14,6 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    @Query("SELECT o FROM Order o JOIN o.user uc WHERE o.user = :user")
+    @Query("SELECT o FROM Order o JOIN o.user uc JOIN o.orderItems oi WHERE o.user = :user")
     Page<Order> findAllByUser(@Param("user") UserEntity user, Pageable pageable);
 }
