@@ -106,7 +106,6 @@ public class CardService {
         } finally {
             driver.quit();
         }
-
         return resultItem;
     }
 

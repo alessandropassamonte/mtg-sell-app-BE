@@ -24,7 +24,11 @@ public class Order {
 
     private BigDecimal totalPrice;
 
-    @OneToMany(mappedBy = "order")
+    private BigDecimal totalPriceCardMarket;
+
+    private String name;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
 }
