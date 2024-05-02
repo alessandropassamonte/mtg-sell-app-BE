@@ -1,6 +1,7 @@
 package com.mtgsell.mtgsellapp.controllers;
 
 import com.mtgsell.mtgsellapp.dto.request.CardAddUserRequest;
+import com.mtgsell.mtgsellapp.dto.response.SuccessResponse;
 import com.mtgsell.mtgsellapp.entities.Card;
 import com.mtgsell.mtgsellapp.entities.UserCard;
 import com.mtgsell.mtgsellapp.entities.UserEntity;
@@ -38,7 +39,7 @@ public class UserCardController {
     @PostMapping("/addCards")
     public ResponseEntity<?> addCardsToUser(@RequestBody UserCard userCard, HttpServletRequest request) {
         userCardService.addCardsToCurrentUser(userCard, request);
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(new SuccessResponse("OK"));
     }
 
     @PostMapping("/update")
