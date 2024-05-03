@@ -25,19 +25,17 @@ public class CardService {
 
     public Page<Card> findPaginated(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        String basicLand = "%basic land%";
-        String terraBase = "%terra base%";
-        String token = "%token%";
-        return cardRepository.findAllCards(basicLand.toLowerCase(), terraBase.toLowerCase(), token.toLowerCase(), pageRequest);
+        String basicLand = "basic %";
+        String token = "token%";
+        return cardRepository.findAllCards(basicLand.toLowerCase(),  token.toLowerCase(), pageRequest);
     }
 
     public Page<Card> findByNamePaginated(int page, int size, String search) {
 
         PageRequest pageRequest = PageRequest.of(page < 0 ? 0 : page, size);
-        String basicLand = "%basic land%";
-        String terraBase = "%terra base%";
-        String token = "%token%";
-        return cardRepository.findAllCardsByName(basicLand.toLowerCase(), terraBase.toLowerCase(), token.toLowerCase(), search, pageRequest);
+        String basicLand = "basic %";
+        String token = "token%";
+        return cardRepository.findAllCardsByName(basicLand.toLowerCase(), token.toLowerCase(), search, pageRequest);
     }
 
     public Card findById(String id, Boolean isFoil) throws IOException {
@@ -58,10 +56,9 @@ public class CardService {
     }
 
     public List<Card> findAutocomplete(String search) {
-        String basicLand = "%basic land%";
-        String terraBase = "%terra base%";
-        String token = "%token%";
-        return cardRepository.findAutocomplete(basicLand.toLowerCase(), terraBase.toLowerCase(), token.toLowerCase(), search).orElseThrow();
+        String basicLand = "basic %";
+        String token = "token%";
+        return cardRepository.findAutocomplete(basicLand.toLowerCase(),  token.toLowerCase(), search).orElseThrow();
     }
 
 

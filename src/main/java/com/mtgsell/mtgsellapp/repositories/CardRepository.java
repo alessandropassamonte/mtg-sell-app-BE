@@ -17,14 +17,16 @@ import java.util.Optional;
 public interface CardRepository extends JpaRepository<Card, Long> {
 
     @Query("SELECT c FROM Card c WHERE " +
-            "(c.typeLine IS NOT NULL AND c.typeLine NOT LIKE %:basicLand% AND c.typeLine NOT LIKE %:token% AND c.typeLine NOT LIKE 'Card // Card') OR " +
-            "(c.printedTypeLine IS NOT NULL AND c.printedTypeLine NOT LIKE %:terraBase%)")
-    Page<Card> findAllCards(String basicLand, String terraBase, String token, Pageable pageable);
+            "(c.typeLine IS NOT NULL AND c.typeLine NOT LIKE :basicLand AND c.typeLine NOT LIKE :token AND c.typeLine NOT LIKE 'Card // Card') OR " +
+            "(c.printedTypeLine IS NOT NULL AND c.typeLine NOT LIKE :basicLand)")
+    Page<Card> findAllCards(@Param("basicLand") String basicLand, @Param("token") String token, Pageable pageable);
 
-    @Query("SELECT c FROM Card c WHERE (c.name LIKE %:search% or c.printedName LIKE %:search%) AND ( " +
-            "(c.typeLine IS NOT NULL AND c.typeLine NOT LIKE %:basicLand% AND c.typeLine NOT LIKE %:token% AND c.typeLine NOT LIKE 'Card // Card') OR " +
-            "(c.printedTypeLine IS NOT NULL AND c.printedTypeLine NOT LIKE %:terraBase%) )  ")
-    Page<Card> findAllCardsByName(String basicLand, String terraBase, String token, String search, Pageable pageable);
+    @Query("SELECT c FROM Card c WHERE " +
+            "(c.name LIKE %:search% OR c.printedName LIKE %:search%) AND " +
+            "((c.typeLine IS NOT NULL AND c.typeLine NOT LIKE :basicLand AND c.typeLine NOT LIKE :token AND c.typeLine NOT LIKE 'Card // Card') OR " +
+            "(c.printedTypeLine IS NOT NULL AND c.typeLine NOT LIKE :basicLand))")
+    Page<Card> findAllCardsByName(@Param("basicLand") String basicLand, @Param("token") String token, @Param("search") String search, Pageable pageable);
+
 
     Optional<Card> findByCardId(String cardId);
 
@@ -32,9 +34,10 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     Page<Card> findAllByUser(@Param("user") UserEntity user, Pageable pageable);
 
 
-    @Query("SELECT c FROM Card c WHERE (c.name LIKE %:search% or c.printedName LIKE %:search%) AND ( " +
-            "(c.typeLine IS NOT NULL AND c.typeLine NOT LIKE %:basicLand% AND c.typeLine NOT LIKE %:token% AND c.typeLine NOT LIKE 'Card // Card') OR " +
-            "(c.printedTypeLine IS NOT NULL AND c.printedTypeLine NOT LIKE %:terraBase%) )  ")
-    Optional<List<Card>> findAutocomplete(String basicLand, String terraBase, String token, String search);
+    @Query("SELECT c FROM Card c WHERE " +
+            "(c.name LIKE %:search% OR c.printedName LIKE %:search%) AND " +
+            "((c.typeLine IS NOT NULL AND c.typeLine NOT LIKE :basicLand AND c.typeLine NOT LIKE :token AND c.typeLine NOT LIKE 'Card // Card') OR " +
+            "(c.printedTypeLine IS NOT NULL AND c.typeLine NOT LIKE :basicLand))")
+    Optional<List<Card>> findAutocomplete(@Param("basicLand") String basicLand, @Param("token") String token, @Param("search") String search);
 
 }
