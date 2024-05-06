@@ -11,4 +11,7 @@ import java.util.Optional;
 public interface EditionRepository  extends JpaRepository<Edition, Long> {
 
     Optional<Edition> findBySetId(String setId);
+
+
+    Optional<Edition> findBySetCode(String setCode);
 }

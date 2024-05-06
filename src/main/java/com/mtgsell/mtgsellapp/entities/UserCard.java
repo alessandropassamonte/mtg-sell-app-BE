@@ -22,6 +22,8 @@ public class UserCard {
 
     private Boolean inVendita;
 
+    private String lang;
+
     private Boolean foil;
 
     private Boolean attivo;

@@ -1,7 +1,10 @@
 package com.mtgsell.mtgsellapp.services;
 
 import com.mtgsell.mtgsellapp.entities.Card;
+import com.mtgsell.mtgsellapp.entities.UserEntity;
 import com.mtgsell.mtgsellapp.repositories.CardRepository;
+import com.mtgsell.mtgsellapp.repositories.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -22,6 +25,12 @@ public class CardService {
 
     @Autowired
     CardRepository cardRepository;
+
+    @Autowired
+    JwtService jwtService;
+
+    @Autowired
+    UserRepository userRepository;
 
     public Page<Card> findPaginated(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
@@ -105,6 +114,8 @@ public class CardService {
         }
         return resultItem;
     }
+
+
 
 
 }

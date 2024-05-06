@@ -1,5 +1,6 @@
 package com.mtgsell.mtgsellapp.controllers;
 
+import com.mtgsell.mtgsellapp.dto.response.SuccessResponse;
 import com.mtgsell.mtgsellapp.entities.Order;
 import com.mtgsell.mtgsellapp.entities.UserCard;
 import com.mtgsell.mtgsellapp.services.OrderService;
@@ -7,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/orders")
@@ -28,5 +30,12 @@ public class GestioneOrdiniController {
     public Order saveOrder(@RequestBody Order order,
                                    HttpServletRequest request) {
         return orderService.save(request, order);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete(@RequestParam Long orderId,
+                                 HttpServletRequest request) {
+        orderService.delete(request, orderId);
+        return ResponseEntity.ok(new SuccessResponse("Ok"));
     }
 }

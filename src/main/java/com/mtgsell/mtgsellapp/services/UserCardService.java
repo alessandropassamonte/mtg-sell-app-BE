@@ -59,4 +59,30 @@ public class UserCardService {
         userCard.setUsers(userEntity);
         return userCardRepository.save(userCard);
     }
+
+    public List<Card> findAutocomplete(String search, HttpServletRequest request) {
+        String username = jwtService.extractTokenFromRequest(request);
+        UserEntity user = userRepository.findByUsername(username).orElseThrow();
+        String basicLand = "basic %";
+        String token = "token%";
+        return userCardRepository.findAutocomplete(basicLand.toLowerCase(),  token.toLowerCase(), search, user).orElseThrow();
+    }
+
+    @Transactional
+    public void addAllToCurrentUser(List<UserCard> userCards, HttpServletRequest request) {
+        String username = jwtService.extractTokenFromRequest(request);
+        UserEntity userEntity = userRepository.findByUsername(username).orElseThrow();
+
+        for(UserCard userCardItem: userCards){
+            UserCard newUserCard = new UserCard();
+            newUserCard.setUsers(userEntity);
+            newUserCard.setDate(new Date());
+            newUserCard.setCard(userCardItem.getCard());
+            newUserCard.setFoil(userCardItem.getFoil());
+            newUserCard.setLang(userCardItem.getLang());
+            newUserCard.setAttivo(userCardItem.getAttivo());
+            newUserCard.setInVendita(userCardItem.getInVendita());
+            userCardRepository.save(newUserCard);
+        }
+    }
 }

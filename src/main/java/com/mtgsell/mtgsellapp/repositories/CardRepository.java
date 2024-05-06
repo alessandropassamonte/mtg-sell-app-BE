@@ -40,4 +40,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             "(c.printedTypeLine IS NOT NULL AND c.typeLine NOT LIKE :basicLand))")
     Optional<List<Card>> findAutocomplete(@Param("basicLand") String basicLand, @Param("token") String token, @Param("search") String search);
 
+    @Query("SELECT c FROM Card c where c.cardId = :cardId" )
+    Optional<Card> findBySetIt(@Param("cardId") String cardId);
+
 }

@@ -49,4 +49,8 @@ public class OrderService {
         order.setOrderDate(new Date());
         return orderRepository.save(order);
     }
+
+    public void delete(HttpServletRequest request,  Long orderId){
+        orderRepository.deleteById(orderId);
+    }
 }

@@ -42,8 +42,20 @@ public class UserCardController {
         return ResponseEntity.ok(new SuccessResponse("OK"));
     }
 
+    @PostMapping("/addAll")
+    public ResponseEntity<?> addCardsToUser(@RequestBody List<UserCard> userCards, HttpServletRequest request) {
+        userCardService.addAllToCurrentUser(userCards, request);
+        return ResponseEntity.ok(new SuccessResponse("OK"));
+    }
+
     @PostMapping("/update")
     public ResponseEntity<?> update(@RequestBody UserCard userCard, HttpServletRequest request) {
         return ResponseEntity.ok(userCardService.update(userCard, request));
+    }
+
+    @GetMapping("/searchAutocomplete")
+    public List<Card> findAutocomplete(@RequestParam String search, HttpServletRequest request) {
+        List<Card> result = userCardService.findAutocomplete(search, request);
+        return result;
     }
 }

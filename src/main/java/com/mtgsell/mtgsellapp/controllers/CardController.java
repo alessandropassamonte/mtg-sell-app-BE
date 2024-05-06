@@ -4,6 +4,7 @@ import com.mtgsell.mtgsellapp.dto.response.PriceResponse;
 import com.mtgsell.mtgsellapp.entities.Card;
 import com.mtgsell.mtgsellapp.services.CardService;
 import com.mtgsell.mtgsellapp.services.EditionService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

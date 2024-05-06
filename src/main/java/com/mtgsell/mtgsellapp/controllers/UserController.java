@@ -2,10 +2,7 @@ package com.mtgsell.mtgsellapp.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mtgsell.mtgsellapp.dto.request.CardAddUserRequest;
-import com.mtgsell.mtgsellapp.entities.Card;
-import com.mtgsell.mtgsellapp.entities.Edition;
-import com.mtgsell.mtgsellapp.entities.UserCard;
-import com.mtgsell.mtgsellapp.entities.UserEntity;
+import com.mtgsell.mtgsellapp.entities.*;
 import com.mtgsell.mtgsellapp.services.EditionService;
 import com.mtgsell.mtgsellapp.services.JwtService;
 import com.mtgsell.mtgsellapp.services.UserService;
@@ -19,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -34,6 +32,21 @@ import java.util.Map;
 @RequestMapping("/user")
 @RestController
 public class UserController {
+
+    @Autowired
+    UserService userService;
+    @GetMapping("/userInSession")
+    public ResponseEntity<?> userInSession(HttpServletRequest request) {
+        return ResponseEntity.ok(userService.userInSession(request));
+    }
+
+    @GetMapping("/salva")
+    public ResponseEntity<?> salva(HttpServletRequest request) throws IOException {
+    this.userService.salva(request);
+        return ResponseEntity.ok("OK");
+    }
+
+
 
 
 
